@@ -1,0 +1,11 @@
+<ul>
+{{#result.projectList}}
+    <li>{{name}}</li>
+    {{#addedDateTime}}
+        <ul>
+            <li>{{this}}</li>
+        </ul>
+    {{/addedDateTime}}
+{{/result.projectList}}
+</ul>
+{{>footer}}

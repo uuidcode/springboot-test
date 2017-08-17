@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driverClassName: com.p6spy.engine.spy.P6SpyDriver
+    url: ${url}
+    username: ${username}
+    password: ${password}
+    testWhileIdle: true
+    validationQuery: select 1
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      org:
+        hibernate:
+          envers:
+            audit_table_suffix: _history
+            revision_field_name: revision
+            revision_type_field_name: revision_type
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+  mustache:
+    cache: false
+    expose-request-attributes: true
