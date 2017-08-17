@@ -33,7 +33,6 @@ public class ProjectService extends CoreService<Project> {
     @Resource
     private AuthorService authorService;
 
-    @SuppressWarnings("all")
     public Project find(Long projectId) {
         Project project = super.find(projectId);
 
