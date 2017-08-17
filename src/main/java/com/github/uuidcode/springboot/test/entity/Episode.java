@@ -14,7 +14,7 @@ import org.hibernate.envers.Audited;
 @Entity
 @Audited
 public class Episode {
-    public static enum EpisodeType {
+    public enum EpisodeType {
         OPEN, CLOSED
     }
     

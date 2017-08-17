@@ -10,7 +10,7 @@ import javax.persistence.Transient;
 
 @Entity
 public class Author {
-    public static enum Status {
+    public enum Status {
         SERVICE, WAITING
     }
 
