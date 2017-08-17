@@ -11,7 +11,6 @@ import com.github.uuidcode.springboot.test.entity.Author;
 import com.github.uuidcode.springboot.test.entity.Project;
 import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
 import com.github.uuidcode.springboot.test.entity.QAuthor;
-import com.github.uuidcode.springboot.test.entity.QPartner;
 import com.github.uuidcode.springboot.test.entity.QProject;
 import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
