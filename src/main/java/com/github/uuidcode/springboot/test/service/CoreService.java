@@ -28,6 +28,7 @@ public class CoreService<T> {
         return t;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T find(Long id) {
         ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
         Class<T> tClass = (Class<T>) genericSuperClass.getActualTypeArguments()[0];
@@ -42,14 +43,12 @@ public class CoreService<T> {
 
     public void update(Supplier<Long> supplier, Consumer<T> consumer) {
         Optional<T> optional = Optional.ofNullable(this.find(supplier.get()));
-        optional.ifPresent(p -> {
-            consumer.accept(p);
-        });
+        optional.ifPresent(consumer::accept);
     }
 
     public void remove(Long id) {
         Optional<T> projectOptional = Optional.ofNullable(this.find(id));
-        projectOptional.ifPresent(p -> this.entityManager.remove(p));
+        projectOptional.ifPresent(this.entityManager::remove);
     }
 
     public JPAQuery<T> query() {
