@@ -1,9 +1,6 @@
 package com.github.uuidcode.springboot.test.service;
 
-import static java.util.Optional.ofNullable;
-
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
