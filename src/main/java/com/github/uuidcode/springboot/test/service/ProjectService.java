@@ -95,8 +95,8 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public void update(Project project) {
-        Optional<Project> projectOptional = ofNullable(this.find(project.getProjectId()));
-        projectOptional.map(p -> p.setName(CoreUtil.createUUID()));
+        this.update(project::getProjectId,
+            p -> p.setName(CoreUtil.createUUID()));
     }
 }
 

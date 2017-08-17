@@ -12,9 +12,7 @@ public class ProjectEpisodeService extends CoreService<Episode> {
     public void update(Episode episode) {
         this.update(
             episode::getEpisodeId,
-            e ->
-                e.setName(episode.getName())
-                .setUpdatedDateTime(this.now())
-        );
+            e ->e.setName(episode.getName())
+                .setUpdatedDateTime(this.now()));
     }
 }
