@@ -1,5 +1,7 @@
 package com.github.uuidcode.springboot.test.service;
 
+import static java.util.Optional.ofNullable;
+
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -42,12 +44,12 @@ public class CoreService<T> {
     }
 
     public void update(Supplier<Long> supplier, Consumer<T> consumer) {
-        Optional<T> optional = Optional.ofNullable(this.find(supplier.get()));
+        Optional<T> optional = ofNullable(this.find(supplier.get()));
         optional.ifPresent(consumer::accept);
     }
 
     public void remove(Long id) {
-        Optional<T> projectOptional = Optional.ofNullable(this.find(id));
+        Optional<T> projectOptional = ofNullable(this.find(id));
         projectOptional.ifPresent(this.entityManager::remove);
     }
 
