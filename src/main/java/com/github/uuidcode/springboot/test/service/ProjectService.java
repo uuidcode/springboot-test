@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
-import com.github.uuidcode.springboot.test.entity.Partner;
 import com.github.uuidcode.springboot.test.entity.Project;
 import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
 import com.github.uuidcode.springboot.test.entity.QAuthor;
@@ -17,7 +16,6 @@ import com.github.uuidcode.springboot.test.entity.QProject;
 import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Transactional
@@ -26,34 +24,24 @@ public class ProjectService extends CoreService<Project> {
     private QProject qProject = QProject.project;
     private QAuthor qAuthor = QAuthor.author;
     private QProjectAuthorMap qProjectAuthorMap = QProjectAuthorMap.projectAuthorMap;
-    private QPartner qPartner = QPartner.partner;
     @Resource
     private ProjectAuthorMapService projectAuthorMapService;
+
+    @Resource
+    private PartnerService partnerService;
 
     @Resource
     private AuthorService authorService;
 
     @SuppressWarnings("all")
     public Project find(Long projectId) {
-        Tuple tuple = this.query()
-            .select(qProject, qPartner)
-            .from(qProject)
-            .leftJoin(qPartner).on(qPartner.projectId.eq(qProject.projectId))
-            .where(qProject.projectId.eq(projectId))
-            .fetchOne();
+        Project project = super.find(projectId);
 
-        if (tuple == null) {
-            return null;
+        if (project != null) {
+            project.setPartner(this.partnerService.findByProjectId(projectId));
         }
 
-        Project project = tuple.get(qProject);
-        Partner partner = tuple.get(qPartner);
-
-        if (project == null) {
-            return null;
-        }
-
-        return project.setPartner(partner);
+        return project;
     }
 
     public List<Project> findAll(Project project) {
@@ -92,7 +80,7 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public void update(Project project) {
-        this.update(project::getProjectId,
+        super.update(project::getProjectId,
             p -> p.setName(CoreUtil.createUUID()));
     }
 }
