@@ -70,16 +70,21 @@ public class CoreService<T> {
         optional.ifPresent(consumer::accept);
     }
 
-    public void removeById(Long id) {
+    public void updateById(Long id, Consumer<T> consumer) {
+        Optional<T> optional = ofNullable(this.findById(id));
+        optional.ifPresent(consumer::accept);
+    }
+
+    public void deleteById(Long id) {
         Optional<T> projectOptional = ofNullable(this.findById(id));
         projectOptional.ifPresent(this.entityManager::remove);
     }
 
-    public void removeByIdList(List<Long> idList) {
-        idList.forEach(this::removeById);
+    public void deleteByIdList(List<Long> idList) {
+        idList.forEach(this::deleteById);
     }
 
-    public JPAQueryFactory queryFactory() {
+    private JPAQueryFactory queryFactory() {
         return new JPAQueryFactory(this.entityManager);
     }
 

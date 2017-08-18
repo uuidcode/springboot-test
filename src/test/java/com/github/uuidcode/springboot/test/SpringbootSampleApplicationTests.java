@@ -157,7 +157,7 @@ public class SpringbootSampleApplicationTests {
 
         this.projectService.save(project);
         this.projectService.update(project.setName(CoreUtil.createUUID()));
-        this.projectService.removeById(project.getProjectId());
+        this.projectService.deleteById(project.getProjectId());
     }
 
     @Test
@@ -169,7 +169,7 @@ public class SpringbootSampleApplicationTests {
 
         this.projectEpisodeService.save(episode);
         this.projectEpisodeService.update(episode.setName(CoreUtil.createUUID()));
-        this.projectEpisodeService.removeById(episode.getEpisodeId());
+        this.projectEpisodeService.deleteById(episode.getEpisodeId());
     }
 
     public static String getHost() {

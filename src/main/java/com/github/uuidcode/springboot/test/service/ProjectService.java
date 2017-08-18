@@ -1,10 +1,13 @@
 package com.github.uuidcode.springboot.test.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
@@ -17,6 +20,8 @@ import com.querydsl.core.BooleanBuilder;
 @Service
 @Transactional
 public class ProjectService extends CoreService<Project> {
+    protected static Logger logger = LoggerFactory.getLogger(ProjectService.class);
+
     private QProject qProject = QProject.project;
 
     @Resource
@@ -68,6 +73,18 @@ public class ProjectService extends CoreService<Project> {
     public void update(Project project) {
         super.updateById(project::getProjectId,
             p -> p.setName(CoreUtil.createUUID()));
+    }
+
+    public void test() {
+        Project project = this.findById(3L);
+        LocalDateTime now = LocalDateTime.now();
+        this.updateById(project.getProjectId(), p -> p.setName(CoreUtil.formatDateTime(now)));
+
+        List<Project> list = this.findAll();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> insertAndSelect list: {}", CoreUtil.toJson(list));
+        }
     }
 }
 
