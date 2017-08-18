@@ -27,9 +27,10 @@ public class CoreEntity<T> implements Serializable {
         if (this.page == null) {
             this.page = 1L;
         }
+
         return this.page;
     }
-    
+
     public T setPage(Long page) {
         this.page = page;
         return (T) this;
