@@ -56,34 +56,11 @@ public class CoreService<T extends CoreEntity> {
         return (Class<T>) genericSuperClass.getActualTypeArguments()[0];
     }
 
-    public List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder, T entity) {
-        JPAQuery<T> query = this.select(entityPath)
-            .from(entityPath)
-            .where(processBooleanBuilder(booleanBuilder));
-
-        OptionalEx.ofNullable(entity)
-            .mapAndIfPresent(CoreEntity::getOffset, query::offset)
-            .mapAndIfPresent(CoreEntity::getSize, query::limit);
-
-        return query.fetch();
-    }
-
-    public Long count() {
-        EntityPath<T> entityPath = this.getEntityPath();
-        return this.select(entityPath)
-            .from(entityPath)
-            .fetchCount();
-    }
-
     private BooleanBuilder processBooleanBuilder(BooleanBuilder booleanBuilder) {
         if (booleanBuilder == null) {
             booleanBuilder = new BooleanBuilder();
         }
         return booleanBuilder;
-    }
-
-    public List<T> findAll(EntityPath<T> entityPath) {
-        return this.findAll(entityPath, null, null);
     }
 
     public LocalDateTime now() {

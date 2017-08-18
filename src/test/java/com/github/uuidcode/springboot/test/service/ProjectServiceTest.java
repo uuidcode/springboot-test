@@ -112,13 +112,4 @@ public class ProjectServiceTest {
     public void test() {
         this.projectService.test();
     }
-
-    @Test
-    public void count() {
-        Long count = this.projectService.count();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> count count: {}", CoreUtil.toJson(count));
-        }
-    }
 }

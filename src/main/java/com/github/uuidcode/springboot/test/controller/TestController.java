@@ -19,10 +19,9 @@ public class TestController extends CoreController {
 
     @RequestMapping("/project1")
     public void testProject1(Model model) {
-        Result result =
-            new Result()
-                .setProjectList(this.projectService.findAll())
-                .setLayoutType(Layout.LayoutType.DEFAULT);
+        Result result = new Result()
+            .setProjectList(this.projectService.findAll())
+            .setLayoutType(Layout.LayoutType.DEFAULT);
         this.set(model, result);
     }
 

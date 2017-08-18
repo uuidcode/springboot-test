@@ -46,23 +46,33 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public List<Project> findAll(Project project) {
-        return this.selectFromWhere()
-            .offset(project.getOffset())
-            .limit(project.getSize())
-            .fetch()
-            .stream()
-            .map(tuple -> {
-                Project currentProject = tuple.get(QProject.project);
-                Partner currentPartner = tuple.get(QPartner.partner);
-                Author currentAuthor = tuple.get(QAuthor.author);
+        JPAQuery<Tuple> tupleJPAQuery = this.selectFromWhere();
 
-                return currentProject.setPartner(currentPartner)
-                    .setAuthor(currentAuthor);
-            })
+        if (project != null) {
+            tupleJPAQuery.offset(project.getOffset())
+                .limit(project.getSize());
+        }
+
+        return tupleJPAQuery.fetch()
+            .stream()
+            .map(this::processProject)
             .collect(Collectors.toList());
     }
 
-    public Long count(Project project) {
+    public List<Project> findAll() {
+        return this.findAll(null);
+    }
+
+    public Project processProject(Tuple tuple) {
+        Project project = tuple.get(QProject.project);
+        Partner partner = tuple.get(QPartner.partner);
+        Author author = tuple.get(QAuthor.author);
+
+        return project.setPartner(partner)
+            .setAuthor(author);
+    }
+
+    public Long findAllCount(Project project) {
         return this.selectFromWhere().fetchCount();
     }
 
@@ -76,11 +86,6 @@ public class ProjectService extends CoreService<Project> {
             .leftJoin(QAuthor.author)
                 .on(QAuthor.author.authorId.eq(QAuthor.author.authorId))
             .where(QProject.project.projectType.eq(Project.ProjectType.NORMAL));
-    }
-
-    public List<Project> findAll() {
-        Project project = null;
-        return this.findAll(project);
     }
 
     public void save(Author author) {
@@ -102,12 +107,6 @@ public class ProjectService extends CoreService<Project> {
         Project project = this.findById(3L);
         LocalDateTime now = LocalDateTime.now();
         this.updateById(project.getProjectId(), p -> p.setName(CoreUtil.formatDateTime(now)));
-
-        List<Project> list = this.findAll();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> insertAndSelect list: {}", CoreUtil.toJson(list));
-        }
     }
 
     public void deleteIdGreaterThan(Long id) {
