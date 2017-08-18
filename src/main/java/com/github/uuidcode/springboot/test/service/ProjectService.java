@@ -86,5 +86,11 @@ public class ProjectService extends CoreService<Project> {
             logger.debug(">>> insertAndSelect list: {}", CoreUtil.toJson(list));
         }
     }
+
+    public void deleteIdGreaterThan(Long id) {
+        this.delete(this.qProject)
+            .where(this.qProject.projectId.goe(id))
+            .execute();
+    }
 }
 

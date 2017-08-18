@@ -86,6 +86,16 @@ public class ProjectServiceTest {
     }
 
     @Test
+    public void deleteIdGreaterThan() {
+        IntStream.range(0, 10)
+            .mapToObj(i -> new Project().setName(CoreUtil.createUUID()))
+            .map(this.projectService::save)
+            .mapToLong(Project::getProjectId)
+            .min()
+            .ifPresent(this.projectService::deleteIdGreaterThan);
+    }
+
+    @Test
     public void insertAndSelect() {
         Project project = this.projectService.findById(3L);
         LocalDateTime now = LocalDateTime.now();
