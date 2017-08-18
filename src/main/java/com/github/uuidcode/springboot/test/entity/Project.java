@@ -40,6 +40,18 @@ public class Project extends CoreEntity<Project> {
     @Transient
     private Partner partner;
 
+    @Transient
+    private Author author;
+
+    public Author getAuthor() {
+        return this.author;
+    }
+
+    public Project setAuthor(Author author) {
+        this.author = author;
+        return this;
+    }
+
     public ProjectType getProjectType() {
         return this.projectType;
     }

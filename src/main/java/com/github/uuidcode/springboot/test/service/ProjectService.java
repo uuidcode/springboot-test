@@ -15,8 +15,10 @@ import com.github.uuidcode.springboot.test.entity.Author;
 import com.github.uuidcode.springboot.test.entity.Partner;
 import com.github.uuidcode.springboot.test.entity.Project;
 import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
+import com.github.uuidcode.springboot.test.entity.QAuthor;
 import com.github.uuidcode.springboot.test.entity.QPartner;
 import com.github.uuidcode.springboot.test.entity.QProject;
+import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -52,7 +54,10 @@ public class ProjectService extends CoreService<Project> {
             .map(tuple -> {
                 Project currentProject = tuple.get(QProject.project);
                 Partner currentPartner = tuple.get(QPartner.partner);
-                return currentProject.setPartner(currentPartner);
+                Author currentAuthor = tuple.get(QAuthor.author);
+
+                return currentProject.setPartner(currentPartner)
+                    .setAuthor(currentAuthor);
             })
             .collect(Collectors.toList());
     }
@@ -62,10 +67,15 @@ public class ProjectService extends CoreService<Project> {
     }
 
     private JPAQuery<Tuple> selectFromWhere() {
-        return this.select(QProject.project, QPartner.partner)
+        return this.select(QProject.project, QPartner.partner, QAuthor.author)
             .from(QProject.project)
-            .from(QPartner.partner)
-            .where(QProject.project.projectId.eq(QPartner.partner.projectId));
+            .leftJoin(QPartner.partner)
+                .on(QPartner.partner.projectId.eq(QProject.project.projectId))
+            .leftJoin(QProjectAuthorMap.projectAuthorMap)
+                .on(QProjectAuthorMap.projectAuthorMap.projectId.eq(QProject.project.projectId))
+            .leftJoin(QAuthor.author)
+                .on(QAuthor.author.authorId.eq(QAuthor.author.authorId))
+            .where(QProject.project.projectType.eq(Project.ProjectType.NORMAL));
     }
 
     public List<Project> findAll() {
