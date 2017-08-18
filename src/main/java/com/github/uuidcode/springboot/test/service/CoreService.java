@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -17,7 +18,14 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 
 @Service
 @Transactional
@@ -30,11 +38,25 @@ public class CoreService<T> {
         return t;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T find(Long id) {
+    public <T> T findById(Long id) {
         ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
         Class<T> tClass = (Class<T>) genericSuperClass.getActualTypeArguments()[0];
         return this.entityManager.find(tClass, id);
+    }
+
+    public <T> List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder) {
+        if (booleanBuilder == null) {
+            booleanBuilder = new BooleanBuilder();
+        }
+
+        return this.select(entityPath)
+            .from(entityPath)
+            .where(booleanBuilder)
+            .fetch();
+    }
+
+    public <T> List<T> findAll(EntityPath<T> entityPath) {
+        return this.findAll(entityPath, null);
     }
 
     public LocalDateTime now() {
@@ -43,17 +65,37 @@ public class CoreService<T> {
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
-    public void update(Supplier<Long> supplier, Consumer<T> consumer) {
-        Optional<T> optional = ofNullable(this.find(supplier.get()));
+    public void updateById(Supplier<Long> supplier, Consumer<T> consumer) {
+        Optional<T> optional = ofNullable(this.findById(supplier.get()));
         optional.ifPresent(consumer::accept);
     }
 
-    public void remove(Long id) {
-        Optional<T> projectOptional = ofNullable(this.find(id));
+    public void removeById(Long id) {
+        Optional<T> projectOptional = ofNullable(this.findById(id));
         projectOptional.ifPresent(this.entityManager::remove);
     }
 
-    public JPAQuery<T> query() {
-        return new JPAQuery<>(this.entityManager);
+    public void removeByIdList(List<Long> idList) {
+        idList.forEach(this::removeById);
+    }
+
+    public JPAQueryFactory queryFactory() {
+        return new JPAQueryFactory(this.entityManager);
+    }
+
+    public <T> JPAQuery<T> select(EntityPath<T> expression) {
+        return this.queryFactory().query().select(expression);
+    }
+
+    public JPAQuery<Tuple> select(Expression<?>... expression) {
+        return this.queryFactory().query().select(expression);
+    }
+
+    public JPAUpdateClause update(EntityPath<T> entityPath) {
+        return this.queryFactory().update(entityPath);
+    }
+
+    public JPADeleteClause delete(EntityPath<T> entityPath) {
+        return this.queryFactory().delete(entityPath);
     }
 }
