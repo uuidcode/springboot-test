@@ -7,14 +7,11 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
 import com.github.uuidcode.springboot.test.entity.Partner;
 import com.github.uuidcode.springboot.test.entity.Project;
-import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
 import com.github.uuidcode.springboot.test.entity.QAuthor;
 import com.github.uuidcode.springboot.test.entity.QPartner;
 import com.github.uuidcode.springboot.test.entity.QProject;
@@ -38,6 +35,7 @@ public class ProjectService extends CoreService<Project> {
     @Resource
     private AuthorService authorService;
 
+    @Override
     public Project findById(Long projectId) {
         Project project = super.findById(projectId);
 
