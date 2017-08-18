@@ -37,6 +37,6 @@ public class CoreEntity<T> implements Serializable {
             return null;
         }
 
-        return (this.page - 1L) * this.page;
+        return (this.page - 1L) * this.size;
     }
 }
