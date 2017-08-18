@@ -2,6 +2,7 @@ package com.github.uuidcode.springboot.test.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -11,18 +12,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
+import com.github.uuidcode.springboot.test.entity.Partner;
 import com.github.uuidcode.springboot.test.entity.Project;
 import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
+import com.github.uuidcode.springboot.test.entity.QPartner;
 import com.github.uuidcode.springboot.test.entity.QProject;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
-import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.impl.JPAQuery;
 
 @Service
 @Transactional
 public class ProjectService extends CoreService<Project> {
     protected static Logger logger = LoggerFactory.getLogger(ProjectService.class);
-
-    private QProject qProject = QProject.project;
 
     @Resource
     private ProjectAuthorMapService projectAuthorMapService;
@@ -42,17 +44,28 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public List<Project> findAll(Project project) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        return this.selectFromWhere()
+            .offset(project.getOffset())
+            .limit(project.getSize())
+            .fetch()
+            .stream()
+            .map(tuple -> {
+                Project currentProject = tuple.get(QProject.project);
+                Partner currentPartner = tuple.get(QPartner.partner);
+                return currentProject.setPartner(currentPartner);
+            })
+            .collect(Collectors.toList());
+    }
 
-        if (project != null) {
-            Long projectId = project.getProjectId();
+    public Long count(Project project) {
+        return this.selectFromWhere().fetchCount();
+    }
 
-            if (projectId != null) {
-                booleanBuilder.and(qProject.projectId.gt(projectId));
-            }
-        }
-
-        return this.findAll(qProject, booleanBuilder, project);
+    private JPAQuery<Tuple> selectFromWhere() {
+        return this.select(QProject.project, QPartner.partner)
+            .from(QProject.project)
+            .from(QPartner.partner)
+            .where(QProject.project.projectId.eq(QPartner.partner.projectId));
     }
 
     public List<Project> findAll() {
@@ -88,8 +101,8 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public void deleteIdGreaterThan(Long id) {
-        this.delete(this.qProject)
-            .where(this.qProject.projectId.goe(id))
+        this.delete(QProject.project)
+            .where(QProject.project.projectId.goe(id))
             .execute();
     }
 }

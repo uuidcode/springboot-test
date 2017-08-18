@@ -2,6 +2,7 @@ package com.github.uuidcode.springboot.test.service;
 
 import static java.util.Optional.ofNullable;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,9 +17,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
+import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.github.uuidcode.springboot.test.utils.OptionalEx;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -32,6 +36,8 @@ import com.querydsl.jpa.impl.JPAUpdateClause;
 @Service
 @Transactional
 public class CoreService<T extends CoreEntity> {
+    protected static Logger logger = LoggerFactory.getLogger(CoreService.class);
+
     @PersistenceContext
     protected EntityManager entityManager;
 
@@ -41,25 +47,39 @@ public class CoreService<T extends CoreEntity> {
     }
 
     public <T> T findById(Long id) {
-        ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
-        Class<T> tClass = (Class<T>) genericSuperClass.getActualTypeArguments()[0];
+        Class<T> tClass = getEntityClass();
         return this.entityManager.find(tClass, id);
     }
 
-    public List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder, T entity) {
-        if (booleanBuilder == null) {
-            booleanBuilder = new BooleanBuilder();
-        }
+    private <T> Class<T> getEntityClass() {
+        ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
+        return (Class<T>) genericSuperClass.getActualTypeArguments()[0];
+    }
 
+    public List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder, T entity) {
         JPAQuery<T> query = this.select(entityPath)
             .from(entityPath)
-            .where(booleanBuilder);
+            .where(processBooleanBuilder(booleanBuilder));
 
         OptionalEx.ofNullable(entity)
             .mapAndIfPresent(CoreEntity::getOffset, query::offset)
             .mapAndIfPresent(CoreEntity::getSize, query::limit);
 
         return query.fetch();
+    }
+
+    public Long count() {
+        EntityPath<T> entityPath = this.getEntityPath();
+        return this.select(entityPath)
+            .from(entityPath)
+            .fetchCount();
+    }
+
+    private BooleanBuilder processBooleanBuilder(BooleanBuilder booleanBuilder) {
+        if (booleanBuilder == null) {
+            booleanBuilder = new BooleanBuilder();
+        }
+        return booleanBuilder;
     }
 
     public List<T> findAll(EntityPath<T> entityPath) {
@@ -109,5 +129,23 @@ public class CoreService<T extends CoreEntity> {
 
     public JPADeleteClause delete(EntityPath<T> entityPath) {
         return this.queryFactory().delete(entityPath);
+    }
+
+    public EntityPath<T> getEntityPath() {
+        Class<T> tClass = this.getEntityClass();
+        String packageName = tClass.getPackage().getName();
+        String className = tClass.getSimpleName();
+        String qObjectName = "Q" + className;
+        String qObjectClassName = packageName + "." + qObjectName;
+
+        try {
+            Class qClass = Class.forName(qObjectClassName);
+            Field field = qClass.getDeclaredField(CoreUtil.toFirstCharLowerCase(className));
+            field.setAccessible(true);
+            return (EntityPath<T>) field.get(qClass);
+        } catch (Exception e) {
+            this.logger.error("error", e);
+            throw new RuntimeException(e);
+        }
     }
 }
