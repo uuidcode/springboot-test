@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
-import com.github.uuidcode.springboot.test.utils.OptionalEx;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;

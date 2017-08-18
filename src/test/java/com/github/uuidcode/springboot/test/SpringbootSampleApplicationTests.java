@@ -126,11 +126,6 @@ public class SpringbootSampleApplicationTests {
     }
 
     @Test
-    public void createProjectWithAuthor() {
-        this.projectService.save(new Author().setName(CoreUtil.createUUID()).setStatus(Author.Status.SERVICE));
-    }
-
-    @Test
     public void projectServiceFindAll() {
         this.logger.debug(">>> {}", CoreUtil.toJson(this.projectService.findAll()));
     }

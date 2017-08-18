@@ -26,7 +26,10 @@ import com.querydsl.jpa.impl.JPAQuery;
 @Service
 @Transactional
 public class ProjectService extends CoreService<Project> {
-    protected static Logger logger = LoggerFactory.getLogger(ProjectService.class);
+    private QProject qProject = QProject.project;
+    private QProjectAuthorMap qProjectAuthorMap = QProjectAuthorMap.projectAuthorMap;
+    private QAuthor qAuthor = QAuthor.author;
+    private QPartner qPartner = QPartner.partner;
 
     @Resource
     private ProjectAuthorMapService projectAuthorMapService;
@@ -64,9 +67,9 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public Project processProject(Tuple tuple) {
-        Project project = tuple.get(QProject.project);
-        Partner partner = tuple.get(QPartner.partner);
-        Author author = tuple.get(QAuthor.author);
+        Project project = tuple.get(qProject);
+        Partner partner = tuple.get(qPartner);
+        Author author = tuple.get(qAuthor);
 
         return project.setPartner(partner)
             .setAuthor(author);
@@ -77,25 +80,15 @@ public class ProjectService extends CoreService<Project> {
     }
 
     private JPAQuery<Tuple> selectFromWhere() {
-        return this.select(QProject.project, QPartner.partner, QAuthor.author)
-            .from(QProject.project)
-            .leftJoin(QPartner.partner)
-                .on(QPartner.partner.projectId.eq(QProject.project.projectId))
-            .leftJoin(QProjectAuthorMap.projectAuthorMap)
-                .on(QProjectAuthorMap.projectAuthorMap.projectId.eq(QProject.project.projectId))
-            .leftJoin(QAuthor.author)
-                .on(QAuthor.author.authorId.eq(QAuthor.author.authorId))
-            .where(QProject.project.projectType.eq(Project.ProjectType.NORMAL));
-    }
-
-    public void save(Author author) {
-        Project project = new Project().setProjectType(Project.ProjectType.SPECIAL).setName("Hello");
-        this.save(project);
-        this.authorService.save(author);
-        this.projectAuthorMapService.save(new ProjectAuthorMap()
-            .setProjectId(project.getProjectId())
-            .setAuthorId(author.getAuthorId())
-            .setDisplayOrder(1L));
+        return this.select(qProject, qPartner, qAuthor)
+            .from(qProject)
+            .leftJoin(qPartner)
+                .on(qPartner.projectId.eq(qProject.projectId))
+            .leftJoin(qProjectAuthorMap)
+                .on(qProjectAuthorMap.projectId.eq(qProject.projectId))
+            .leftJoin(qAuthor)
+                .on(qAuthor.authorId.eq(qAuthor.authorId))
+            .where(qProject.projectType.eq(Project.ProjectType.NORMAL));
     }
 
     public void update(Project project) {
@@ -110,8 +103,8 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public void deleteIdGreaterThan(Long id) {
-        this.delete(QProject.project)
-            .where(QProject.project.projectId.goe(id))
+        this.delete(qProject)
+            .where(qProject.projectId.goe(id))
             .execute();
     }
 }
