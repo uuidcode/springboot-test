@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.github.uuidcode.springboot.test.entity.CoreEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
@@ -29,7 +30,7 @@ import com.querydsl.jpa.impl.JPAUpdateClause;
 
 @Service
 @Transactional
-public class CoreService<T> {
+public class CoreService<T extends CoreEntity> {
     @PersistenceContext
     protected EntityManager entityManager;
 
@@ -44,7 +45,7 @@ public class CoreService<T> {
         return this.entityManager.find(tClass, id);
     }
 
-    public <T> List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder) {
+    public List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder, T t) {
         if (booleanBuilder == null) {
             booleanBuilder = new BooleanBuilder();
         }
@@ -52,11 +53,13 @@ public class CoreService<T> {
         return this.select(entityPath)
             .from(entityPath)
             .where(booleanBuilder)
+            .offset(t.getOffset())
+            .limit(t.getSize())
             .fetch();
     }
 
-    public <T> List<T> findAll(EntityPath<T> entityPath) {
-        return this.findAll(entityPath, null);
+    public List<T> findAll(EntityPath<T> entityPath) {
+        return this.findAll(entityPath, null, null);
     }
 
     public LocalDateTime now() {

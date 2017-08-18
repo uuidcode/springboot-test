@@ -13,7 +13,7 @@ import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
-public class Episode {
+public class Episode extends CoreEntity<Episode> {
     public enum EpisodeType {
         OPEN, CLOSED
     }

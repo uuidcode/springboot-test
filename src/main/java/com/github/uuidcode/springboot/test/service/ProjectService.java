@@ -52,7 +52,7 @@ public class ProjectService extends CoreService<Project> {
             }
         }
 
-        return this.findAll(qProject, booleanBuilder);
+        return this.findAll(qProject, booleanBuilder, project);
     }
 
     public List<Project> findAll() {

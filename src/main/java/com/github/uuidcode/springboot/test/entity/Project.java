@@ -2,7 +2,6 @@ package com.github.uuidcode.springboot.test.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -19,8 +18,8 @@ import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
-public class Project implements Serializable {
-    public static enum ProjectType {
+public class Project extends CoreEntity<Project> {
+    public enum ProjectType {
         NORMAL,
         SPECIAL
     }

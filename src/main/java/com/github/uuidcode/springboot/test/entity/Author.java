@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 @Entity
-public class Author {
+public class Author extends CoreEntity<Author> {
     public enum Status {
         SERVICE, WAITING
     }

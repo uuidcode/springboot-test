@@ -1,12 +1,12 @@
 package com.github.uuidcode.springboot.test.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@Table(indexes = {
-    @Index(name = "partner_idx1", columnList = "projectId", unique = true)
-})
-public class Partner {
+public class Partner extends CoreEntity<Partner> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long partnerId;

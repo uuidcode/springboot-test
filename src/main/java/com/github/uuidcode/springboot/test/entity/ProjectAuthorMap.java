@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class ProjectAuthorMap {
+public class ProjectAuthorMap extends CoreEntity<ProjectAuthorMap> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
