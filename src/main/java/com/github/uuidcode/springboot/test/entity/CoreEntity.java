@@ -11,6 +11,10 @@ public class CoreEntity<T> implements Serializable {
     private Long size;
 
     public Long getSize() {
+        if (this.size == null) {
+            this.size = 10L;
+        }
+
         return this.size;
     }
 
@@ -20,6 +24,9 @@ public class CoreEntity<T> implements Serializable {
     }
 
     public Long getPage() {
+        if (this.page == null) {
+            this.page = 1L;
+        }
         return this.page;
     }
     
@@ -29,14 +36,6 @@ public class CoreEntity<T> implements Serializable {
     }
 
     public Long getOffset() {
-        if (this.page == null) {
-            this.page = 1L;
-        }
-
-        if (this.size == null) {
-            this.size = 10L
-        }
-
         return (this.page - 1L) * this.size;
     }
 }
