@@ -6,37 +6,37 @@ import javax.persistence.Transient;
 
 public class CoreEntity<T> implements Serializable {
     @Transient
-    private Integer page;
+    private Long page;
     @Transient
-    private Integer size;
+    private Long size;
 
-    public Integer getSize() {
-        if (this.size == 0) {
-            this.size = 10;
-        }
-
+    public Long getSize() {
         return this.size;
     }
 
-    public T setSize(Integer size) {
+    public T setSize(Long size) {
         this.size = size;
         return (T) this;
     }
 
-    public Integer getPage() {
-        if (this.page == 0) {
-            this.page = 1;
-        }
-
+    public Long getPage() {
         return this.page;
     }
     
-    public T setPage(Integer page) {
+    public T setPage(Long page) {
         this.page = page;
         return (T) this;
     }
 
-    public Integer getOffset() {
-        return (this.getPage() - 1) * this.getPage();
+    public Long getOffset() {
+        if (this.page == null) {
+            return null;
+        }
+
+        if (this.size == null) {
+            return null;
+        }
+
+        return (this.page - 1L) * this.page;
     }
 }

@@ -45,17 +45,20 @@ public class CoreService<T extends CoreEntity> {
         return this.entityManager.find(tClass, id);
     }
 
-    public List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder, T t) {
+    public List<T> findAll(EntityPath<T> entityPath, BooleanBuilder booleanBuilder, T entity) {
         if (booleanBuilder == null) {
             booleanBuilder = new BooleanBuilder();
         }
 
-        return this.select(entityPath)
+        JPAQuery<T> query = this.select(entityPath)
             .from(entityPath)
-            .where(booleanBuilder)
-            .offset(t.getOffset())
-            .limit(t.getSize())
-            .fetch();
+            .where(booleanBuilder);
+
+        Optional<T> entityOptional = ofNullable(entity);
+        entityOptional.map(CoreEntity::getOffset).ifPresent(query::offset);
+        entityOptional.map(CoreEntity::getSize).ifPresent(query::limit);
+
+        return query.fetch();
     }
 
     public List<T> findAll(EntityPath<T> entityPath) {
