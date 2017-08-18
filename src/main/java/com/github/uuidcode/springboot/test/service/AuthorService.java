@@ -18,9 +18,7 @@ public class AuthorService extends CoreService<Author> {
     private QProjectAuthorMap qProjectAuthorMap = QProjectAuthorMap.projectAuthorMap;
 
     public List<Author> findAll(Project project) {
-        return
-            this.query()
-            .select(qAuthor, qProjectAuthorMap)
+        return this.select(qAuthor, qProjectAuthorMap)
             .from(qProjectAuthorMap)
             .join(qAuthor).on(qAuthor.authorId.eq(qProjectAuthorMap.authorId))
             .where(qProjectAuthorMap.projectId.eq(project.getProjectId()))

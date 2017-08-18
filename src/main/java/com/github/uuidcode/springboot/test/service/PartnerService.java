@@ -13,8 +13,7 @@ public class PartnerService extends CoreService<Partner> {
     private QPartner qPartner = QPartner.partner;
 
     public Partner findByProjectId(Long projectId) {
-        return this.query()
-            .select(qPartner)
+        return this.select(qPartner)
             .from(qPartner)
             .where(qPartner.projectId.eq(projectId))
             .fetchOne();

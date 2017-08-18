@@ -67,23 +67,23 @@ public class SpringbootSampleApplicationTests {
         this.projectService.save(project);
 
         this.projectService
-            .find(project.getProjectId())
+            .findById(project.getProjectId())
             .nameIsEqualsTo(name);
 
         String newName = "테스트";
         Project.ProjectType projectType = Project.ProjectType.NORMAL;
 
-        this.projectService.update(project::getProjectId,
+        this.projectService.updateById(project::getProjectId,
             p -> p.setName(newName));
 
-        this.projectService.update(project::getProjectId,
+        this.projectService.updateById(project::getProjectId,
             p -> p.setProjectType(projectType));
 
-        this.projectService.find(project.getProjectId())
+        this.projectService.findById(project.getProjectId())
             .nameIsEqualsTo(newName)
             .projectTypeIsEqualsTo(projectType);
 
-        CoreUtil.parseJson(CoreUtil.toJson(this.projectService.find(project.getProjectId())), Project.class)
+        CoreUtil.parseJson(CoreUtil.toJson(this.projectService.findById(project.getProjectId())), Project.class)
             .projectTypeIsEqualsTo(projectType);
     }
 
@@ -137,15 +137,15 @@ public class SpringbootSampleApplicationTests {
 
     @Test
     public void partner() {
-        Project project = this.projectService.find(-1L);
+        Project project = this.projectService.findById(-1L);
         assertThat(project).isNull();
 
-        if (this.partnerService.find(1L) == null) {
+        if (this.partnerService.findById(1L) == null) {
             this.partnerService.save(new Partner().setName(CoreUtil.createUUID()).setProjectId(1L));
         }
 
-        this.projectService.find(1L).partnerIsNotNull();
-        this.projectService.find(2L).partnerIsNull();
+        this.projectService.findById(1L).partnerIsNotNull();
+        this.projectService.findById(2L).partnerIsNull();
     }
 
     @Test
@@ -157,7 +157,7 @@ public class SpringbootSampleApplicationTests {
 
         this.projectService.save(project);
         this.projectService.update(project.setName(CoreUtil.createUUID()));
-        this.projectService.remove(project.getProjectId());
+        this.projectService.removeById(project.getProjectId());
     }
 
     @Test
@@ -169,7 +169,7 @@ public class SpringbootSampleApplicationTests {
 
         this.projectEpisodeService.save(episode);
         this.projectEpisodeService.update(episode.setName(CoreUtil.createUUID()));
-        this.projectEpisodeService.remove(episode.getEpisodeId());
+        this.projectEpisodeService.removeById(episode.getEpisodeId());
     }
 
     public static String getHost() {

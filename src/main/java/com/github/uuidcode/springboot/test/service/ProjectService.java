@@ -10,30 +10,24 @@ import org.springframework.stereotype.Service;
 import com.github.uuidcode.springboot.test.entity.Author;
 import com.github.uuidcode.springboot.test.entity.Project;
 import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
-import com.github.uuidcode.springboot.test.entity.QAuthor;
 import com.github.uuidcode.springboot.test.entity.QProject;
-import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQuery;
 
-@Transactional
 @Service
+@Transactional
 public class ProjectService extends CoreService<Project> {
     private QProject qProject = QProject.project;
-    private QAuthor qAuthor = QAuthor.author;
-    private QProjectAuthorMap qProjectAuthorMap = QProjectAuthorMap.projectAuthorMap;
+
     @Resource
     private ProjectAuthorMapService projectAuthorMapService;
-
     @Resource
     private PartnerService partnerService;
-
     @Resource
     private AuthorService authorService;
 
-    public Project find(Long projectId) {
-        Project project = super.find(projectId);
+    public Project findById(Long projectId) {
+        Project project = super.findById(projectId);
 
         if (project != null) {
             project.setPartner(this.partnerService.findByProjectId(projectId));
@@ -44,27 +38,21 @@ public class ProjectService extends CoreService<Project> {
 
     public List<Project> findAll(Project project) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        Long projectId = project.getProjectId();
 
-        if (projectId != null) {
-            booleanBuilder.and(qProject.projectId.gt(projectId));
+        if (project != null) {
+            Long projectId = project.getProjectId();
+
+            if (projectId != null) {
+                booleanBuilder.and(qProject.projectId.gt(projectId));
+            }
         }
 
-        return new JPAQuery<>(this.entityManager)
-            .select(qProject)
-            .from(qProject)
-            .where(booleanBuilder)
-            .fetch();
+        return this.findAll(qProject, booleanBuilder);
     }
 
     public List<Project> findAll() {
-        return new JPAQuery<>(this.entityManager)
-            .select(qProject)
-            .from(this.qAuthor)
-            .join(qProjectAuthorMap).on(qProjectAuthorMap.authorId.eq(this.qAuthor.authorId))
-            .join(qProject).on(qProject.projectId.eq(this.qProjectAuthorMap.projectId))
-            .where(this.qProject.projectType.eq(Project.ProjectType.SPECIAL))
-            .fetch();
+        Project project = null;
+        return this.findAll(project);
     }
 
     public void save(Author author) {
@@ -78,7 +66,7 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public void update(Project project) {
-        super.update(project::getProjectId,
+        super.updateById(project::getProjectId,
             p -> p.setName(CoreUtil.createUUID()));
     }
 }

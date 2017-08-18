@@ -24,9 +24,8 @@ public class ProjectController {
     @RequestMapping(value = "/api/project", method = RequestMethod.GET)
     @ResponseBody
     public Result apiList(Project project) {
-        return
-            new Result()
-                .setProjectList(this.projectService.findAll(project));
+        return new Result()
+            .setProjectList(this.projectService.findAll(project));
     }
 
     @RequestMapping(value = "/project", method = RequestMethod.GET)
