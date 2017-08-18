@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.codec.net.URLCodec;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
@@ -197,5 +199,10 @@ public class CoreUtil {
         return DateTimeFormatter
             .ofPattern(pattern)
             .format(localDateTime);
+    }
+
+    public static <T, U> Optional<T> mapAndIfPresent(Optional<T> optional, Function<? super T, ? extends U> mapper, Consumer<? super U> consumer) {
+        optional.map(mapper).ifPresent(consumer);
+        return optional;
     }
 }

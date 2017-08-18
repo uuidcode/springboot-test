@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
+import com.github.uuidcode.springboot.test.utils.OptionalEx;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
@@ -54,9 +55,9 @@ public class CoreService<T extends CoreEntity> {
             .from(entityPath)
             .where(booleanBuilder);
 
-        Optional<T> entityOptional = ofNullable(entity);
-        entityOptional.map(CoreEntity::getOffset).ifPresent(query::offset);
-        entityOptional.map(CoreEntity::getSize).ifPresent(query::limit);
+        OptionalEx.ofNullable(entity)
+            .mapAndIfPresent(CoreEntity::getOffset, query::offset)
+            .mapAndIfPresent(CoreEntity::getSize, query::limit);
 
         return query.fetch();
     }
