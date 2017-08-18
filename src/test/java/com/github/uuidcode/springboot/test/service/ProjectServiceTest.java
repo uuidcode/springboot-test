@@ -45,7 +45,7 @@ public class ProjectServiceTest {
             logger.debug(">>> findAll list: {}", CoreUtil.toJson(list));
         }
 
-        list = this.projectService.findAll(new Project().setProjectId(10L));
+        list = this.projectService.findAll(new Project().setProjectId(10L).setPage(3L).setSize(5L));
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> findAll list: {}", CoreUtil.toJson(list));
