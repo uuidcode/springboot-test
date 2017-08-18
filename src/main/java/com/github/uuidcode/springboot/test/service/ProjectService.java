@@ -29,11 +29,7 @@ public class ProjectService extends CoreService<Project> {
     private QPartner qPartner = QPartner.partner;
 
     @Resource
-    private ProjectAuthorMapService projectAuthorMapService;
-    @Resource
     private PartnerService partnerService;
-    @Resource
-    private AuthorService authorService;
 
     @Override
     public Project findById(Long projectId) {
