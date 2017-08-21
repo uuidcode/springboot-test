@@ -42,7 +42,7 @@ public class PageImplTest {
     public void last() {
         Sort sort = new Sort(new Order(ASC, "projectId"));
         Pageable pageable = new PageRequest(12, 10, sort);
-        PageImpl page = new PageImpl(this.getList(pageable), pageable, totalList.size());
+        Page page = new PageImpl(this.getList(pageable), pageable, totalList.size());
 
         assertThat(page.hasNext()).isFalse();
         assertThat(page.hasPrevious()).isTrue();

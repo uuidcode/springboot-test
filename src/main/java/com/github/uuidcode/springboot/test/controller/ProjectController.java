@@ -30,9 +30,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/project", method = RequestMethod.GET)
     public void list(Model model, Project project) {
-        Result result =
-            new Result()
-                .setProjectList(this.projectService.findAll(project));
+        Result result = new Result().setProjectList(this.projectService.findAll(project));
         model.addAttribute("result", result);
     }
 }

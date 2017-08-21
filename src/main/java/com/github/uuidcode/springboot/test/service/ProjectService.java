@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
@@ -47,10 +48,15 @@ public class ProjectService extends CoreService<Project> {
 
     public List<Project> findAll(Project project) {
         JPAQuery<Tuple> tupleJPAQuery = this.selectFromWhere();
+        PageRequest pageRequest = project.getPageRequest();
 
         if (project != null) {
-            tupleJPAQuery.offset(project.getOffset())
+            tupleJPAQuery.offset(pageRequest.getOffset())
                 .limit(project.getSize());
+
+            if ("projectId".equals(project.getOrderBy())) {
+                tupleJPAQuery.orderBy(qProject.projectId.desc());
+            }
         }
 
         return tupleJPAQuery.fetch()
