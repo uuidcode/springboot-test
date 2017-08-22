@@ -4,13 +4,11 @@ import java.io.Serializable;
 
 import javax.persistence.Transient;
 
-import org.springframework.data.domain.PageRequest;
-
 public class CoreEntity<T> implements Serializable {
     @Transient
-    private Integer page;
+    private Long page;
     @Transient
-    private Integer size;
+    private Long size;
     @Transient
     private String orderBy;
     
@@ -23,33 +21,33 @@ public class CoreEntity<T> implements Serializable {
         return this;
     }
 
-    public Integer getSize() {
+    public Long getSize() {
         return this.size;
     }
 
-    public T setSize(Integer size) {
+    public T setSize(Long size) {
         this.size = size;
         return (T) this;
     }
 
-    public Integer getPage() {
+    public Long getPage() {
         return this.page;
     }
 
-    public T setPage(Integer page) {
+    public T setPage(Long page) {
         this.page = page;
         return (T) this;
     }
 
-    public PageRequest getPageRequest() {
-        if (this.size == null) {
-            this.size = 10;
-        }
-
+    public Long getOffset() {
         if (this.page == null) {
-            this.page = 1;
+            this.page = 1L;
         }
 
-        return new PageRequest(this.page - 1, this.size);
+        if (this.size == null) {
+            this.size = 10L;
+        }
+
+        return (this.page - 1L) * this.size;
     }
 }
