@@ -154,4 +154,11 @@ public class CoreService<T extends CoreEntity> {
             }
         }
     }
+
+    protected void applyPageable(JPAQuery jpaQuery, Pageable pageable, Runnable runnable) {
+        if (pageable != null) {
+            jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize());
+            runnable.run();
+        }
+    }
 }

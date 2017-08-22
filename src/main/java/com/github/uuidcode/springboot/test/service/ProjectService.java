@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
@@ -19,6 +18,7 @@ import com.github.uuidcode.springboot.test.entity.QPartner;
 import com.github.uuidcode.springboot.test.entity.QProject;
 import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
+import com.github.uuidcode.springboot.test.utils.Pagination;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -49,10 +49,10 @@ public class ProjectService extends CoreService<Project> {
     public List<Project> findAll(Project project) {
         JPAQuery<Tuple> tupleJPAQuery = this.selectFromWhere();
 
-        Pageable pageable = project.getPageable();
-        this.applyPageable(tupleJPAQuery, pageable);
-        this.applyOrder(tupleJPAQuery, pageable, "projectId", qProject.projectId);
-        this.applyOrder(tupleJPAQuery, pageable, "projectType", qProject.projectType);
+        Pagination.of(tupleJPAQuery)
+            .setPageable(project.getPageable())
+            .sort(qProject.projectId, "projectId")
+            .sort(qProject.projectType, "projectType");
 
         return tupleJPAQuery.fetch()
             .stream()
