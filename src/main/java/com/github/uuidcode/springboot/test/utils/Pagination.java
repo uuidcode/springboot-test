@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
-import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.EnumPath;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -15,21 +14,21 @@ import com.querydsl.jpa.impl.JPAQuery;
 public class Pagination {
     private JPAQuery query;
     private Pageable pageable;
-    
-    public Pageable getPageable() {
-        return this.pageable;
-    }
-    
-    public Pagination setPageable(Pageable pageable) {
+
+    public Pagination paging(Pageable pageable) {
+        if (pageable == null) {
+            return this;
+        }
+
         this.pageable = pageable;
+
+        this.query.offset(pageable.getOffset())
+            .limit(pageable.getPageSize());
+
         return this;
     }
     
-    public JPAQuery getQuery() {
-        return this.query;
-    }
-    
-    public Pagination setQuery(JPAQuery query) {
+    private Pagination setQuery(JPAQuery query) {
         this.query = query;
         return this;
     }
@@ -38,25 +37,25 @@ public class Pagination {
         return new Pagination().setQuery(query);
     }
 
-    public Pagination orderBy(NumberPath path) {
-        return this.orderBy(path, path.getMetadata().getName());
+    public Pagination sorting(NumberPath path) {
+        return this.sorting(path, path.getMetadata().getName());
     }
 
-    public Pagination orderBy(StringPath path) {
-        return this.orderBy(path, path.getMetadata().getName());
+    public Pagination sorting(StringPath path) {
+        return this.sorting(path, path.getMetadata().getName());
     }
 
-    public Pagination orderBy(EnumPath path) {
-        return this.orderBy(path, path.getMetadata().getName());
+    public Pagination sorting(EnumPath path) {
+        return this.sorting(path, path.getMetadata().getName());
     }
 
-    public Pagination orderBy(DateTimePath path) {
-        return this.orderBy(path, path.getMetadata().getName());
+    public Pagination sorting(DateTimePath path) {
+        return this.sorting(path, path.getMetadata().getName());
     }
 
-    public Pagination orderBy(ComparableExpressionBase expression, String columnName) {
-        if (pageable != null) {
-            Sort sort = pageable.getSort();
+    public Pagination sorting(ComparableExpressionBase expression, String columnName) {
+        if (this.pageable != null) {
+            Sort sort = this.pageable.getSort();
             Sort.Order order = sort.getOrderFor(columnName);
 
             if (order != null) {

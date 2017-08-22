@@ -50,9 +50,9 @@ public class ProjectService extends CoreService<Project> {
         JPAQuery<Tuple> tupleJPAQuery = this.selectFromWhere();
 
         Pagination.of(tupleJPAQuery)
-            .setPageable(project.getPageable())
-            .orderBy(qProject.projectId)
-            .orderBy(qProject.projectType);
+            .paging(project.getPageable())
+            .sorting(qProject.projectId)
+            .sorting(qProject.projectType);
 
         return tupleJPAQuery.fetch()
             .stream()
