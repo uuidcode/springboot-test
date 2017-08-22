@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.uuidcode.springboot.test.entity.Project;
@@ -45,8 +46,7 @@ public class ProjectServiceTest {
             logger.debug(">>> findAll list: {}", CoreUtil.toJson(list));
         }
 
-        list = this.projectService.findAll(new Project().setProjectId(10L)
-            .setPage(3L).setSize(5L));
+        list = this.projectService.findAll(new Project().setProjectId(10L).setPageable(new PageRequest(2, 10)));
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> findAll list: {}", CoreUtil.toJson(list));

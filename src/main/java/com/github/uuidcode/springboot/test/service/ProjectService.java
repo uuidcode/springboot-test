@@ -51,8 +51,8 @@ public class ProjectService extends CoreService<Project> {
 
         Pagination.of(tupleJPAQuery)
             .setPageable(project.getPageable())
-            .sort(qProject.projectId, "projectId")
-            .sort(qProject.projectType, "projectType");
+            .orderBy(qProject.projectId)
+            .orderBy(qProject.projectType);
 
         return tupleJPAQuery.fetch()
             .stream()
