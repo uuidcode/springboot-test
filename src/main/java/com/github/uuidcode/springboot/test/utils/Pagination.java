@@ -72,6 +72,5 @@ public class Pagination {
         }
 
         return expression.desc();
-
     }
 }
