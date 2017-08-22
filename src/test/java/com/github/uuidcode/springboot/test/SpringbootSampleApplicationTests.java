@@ -221,4 +221,15 @@ public class SpringbootSampleApplicationTests {
                 .build()
                 .collect(Collectors.joining(NEW_LINE)));
     }
+
+    @Test
+    public void pageable() {
+        String content = new RequestBuilder()
+            .get(getHost() +  "/project3?page=2&size=10&sort=test,asc&sort=abc,desc&sort=tt,dd")
+            .executeAndGetContent().trim();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> pageable content: {}", content);
+        }
+    }
 }

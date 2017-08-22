@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.Author;
@@ -48,14 +49,10 @@ public class ProjectService extends CoreService<Project> {
     public List<Project> findAll(Project project) {
         JPAQuery<Tuple> tupleJPAQuery = this.selectFromWhere();
 
-        if (project != null) {
-            tupleJPAQuery.offset(project.getOffset())
-                .limit(project.getSize());
-
-            if ("projectId".equals(project.getOrderBy())) {
-                tupleJPAQuery.orderBy(qProject.projectId.desc());
-            }
-        }
+        Pageable pageable = project.getPageable();
+        this.applyPageable(tupleJPAQuery, pageable);
+        this.applyOrder(tupleJPAQuery, pageable, "projectId", qProject.projectId);
+        this.applyOrder(tupleJPAQuery, pageable, "projectType", qProject.projectType);
 
         return tupleJPAQuery.fetch()
             .stream()

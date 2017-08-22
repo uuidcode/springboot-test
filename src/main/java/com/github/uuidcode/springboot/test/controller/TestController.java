@@ -2,9 +2,11 @@ package com.github.uuidcode.springboot.test.controller;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.uuidcode.springboot.test.domain.Layout;
 import com.github.uuidcode.springboot.test.domain.Result;
@@ -12,8 +14,6 @@ import com.github.uuidcode.springboot.test.service.ProjectService;
 
 @Controller
 public class TestController extends CoreController {
-    public static final String ERROR_MESSAGE = "Hello, World";
-
     @Resource
     private ProjectService projectService;
 
@@ -32,5 +32,11 @@ public class TestController extends CoreController {
                 .setProjectList(this.projectService.findAll())
                 .setLayoutType(Layout.LayoutType.TOP);
         this.set(model, result);
+    }
+
+    @RequestMapping("/project3")
+    @ResponseBody
+    public Object testProject3(Pageable pageable) {
+        return pageable;
     }
 }

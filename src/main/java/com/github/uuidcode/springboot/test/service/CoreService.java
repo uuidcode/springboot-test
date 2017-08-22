@@ -19,6 +19,8 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
@@ -27,6 +29,8 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -122,6 +126,32 @@ public class CoreService<T extends CoreEntity> {
         } catch (Exception e) {
             this.logger.error("error", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    private OrderSpecifier<?> getOrderSpecifier(ComparableExpressionBase expression, Sort.Order order) {
+        if (order.isAscending()) {
+            return expression.asc();
+        }
+
+        return expression.desc();
+    }
+
+    protected void applyPageable(JPAQuery jpaQuery, Pageable pageable) {
+        if (pageable != null) {
+            jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize());
+        }
+    }
+
+    protected void applyOrder(JPAQuery jpaQuery, Pageable pageable, String column, ComparableExpressionBase expression) {
+        if (pageable != null) {
+            Sort sort = pageable.getSort();
+
+            Sort.Order order = sort.getOrderFor(column);
+
+            if (order != null) {
+                jpaQuery.orderBy(this.getOrderSpecifier(expression, order));
+            }
         }
     }
 }

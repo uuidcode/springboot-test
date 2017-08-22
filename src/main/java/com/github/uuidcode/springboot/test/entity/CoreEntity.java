@@ -4,50 +4,18 @@ import java.io.Serializable;
 
 import javax.persistence.Transient;
 
+import org.springframework.data.domain.Pageable;
+
 public class CoreEntity<T> implements Serializable {
     @Transient
-    private Long page;
-    @Transient
-    private Long size;
-    @Transient
-    private String orderBy;
-    
-    public String getOrderBy() {
-        return this.orderBy;
-    }
-    
-    public CoreEntity setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-        return this;
+    private Pageable pageable;
+
+    public Pageable getPageable() {
+        return this.pageable;
     }
 
-    public Long getSize() {
-        return this.size;
-    }
-
-    public T setSize(Long size) {
-        this.size = size;
+    public T setPageable(Pageable pageable) {
+        this.pageable = pageable;
         return (T) this;
-    }
-
-    public Long getPage() {
-        return this.page;
-    }
-
-    public T setPage(Long page) {
-        this.page = page;
-        return (T) this;
-    }
-
-    public Long getOffset() {
-        if (this.page == null) {
-            this.page = 1L;
-        }
-
-        if (this.size == null) {
-            this.size = 10L;
-        }
-
-        return (this.page - 1L) * this.size;
     }
 }
