@@ -22,7 +22,7 @@ public class Pagination {
 
         this.pageable = pageable;
 
-        this.query.offset(pageable.getOffset())
+        this.query.offset(pageable.getOffset() - pageable.getPageSize())
             .limit(pageable.getPageSize());
 
         return this;
