@@ -46,22 +46,22 @@ public class ProjectService extends CoreService<Project> {
         return project;
     }
 
-    public List<Project> findAll(Project project) {
-        JPAQuery<Tuple> tupleJPAQuery = this.selectFromWhere();
+    public List<Project> findAll() {
+        return this.findAll(null);
+    }
 
-        Pagination.of(tupleJPAQuery)
+    public List<Project> findAll(Project project) {
+        JPAQuery<Tuple> query = this.selectFromWhere();
+
+        Pagination.of(query)
             .paging(project.getPageable())
             .sorting(qProject.projectId)
             .sorting(qProject.projectType);
 
-        return tupleJPAQuery.fetch()
+        return query.fetch()
             .stream()
             .map(this::processProject)
             .collect(Collectors.toList());
-    }
-
-    public List<Project> findAll() {
-        return this.findAll(null);
     }
 
     public Project processProject(Tuple tuple) {
