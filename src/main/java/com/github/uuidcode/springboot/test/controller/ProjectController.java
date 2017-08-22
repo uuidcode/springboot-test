@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +24,9 @@ public class ProjectController {
 
     @RequestMapping(value = "/api/project", method = RequestMethod.GET)
     @ResponseBody
-    public Result apiList(Project project) {
-        return new Result()
-            .setProjectList(this.projectService.findAll(project));
+    public Result apiList(Project project, Pageable pageable) {
+        project.setPageable(pageable);
+        return new Result().setProjectList(this.projectService.findAll(project));
     }
 
     @RequestMapping(value = "/project", method = RequestMethod.GET)

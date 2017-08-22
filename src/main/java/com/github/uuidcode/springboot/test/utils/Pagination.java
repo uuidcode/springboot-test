@@ -54,14 +54,23 @@ public class Pagination {
     }
 
     public Pagination sorting(ComparableExpressionBase expression, String columnName) {
-        if (this.pageable != null) {
-            Sort sort = this.pageable.getSort();
-            Sort.Order order = sort.getOrderFor(columnName);
-
-            if (order != null) {
-                this.query.orderBy(this.sort(expression, order));
-            }
+        if (this.pageable == null) {
+            return this;
         }
+
+        Sort sort = this.pageable.getSort();
+
+        if (sort == null) {
+            return this;
+        }
+
+        Sort.Order order = sort.getOrderFor(columnName);
+
+        if (order == null) {
+            return this;
+        }
+
+        this.query.orderBy(this.sort(expression, order));
 
         return this;
     }
