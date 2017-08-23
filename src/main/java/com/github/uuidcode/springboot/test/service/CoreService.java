@@ -46,7 +46,7 @@ public class CoreService<T extends CoreEntity> {
     }
 
     public <T> T findById(Long id) {
-        Class<T> tClass = getEntityClass();
+        Class<T> tClass = this.getEntityClass();
         return this.entityManager.find(tClass, id);
     }
 
