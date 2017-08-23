@@ -70,7 +70,12 @@ public class ProjectService extends CoreService<Project> {
         }
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qProject.projectType.eq(project.getProjectType()));
+        Project.ProjectType projectType = project.getProjectType();
+
+        if (projectType != null) {
+            booleanBuilder.and(qProject.projectType.eq(projectType));
+        }
+
         return booleanBuilder;
     }
 
@@ -102,8 +107,7 @@ public class ProjectService extends CoreService<Project> {
             .leftJoin(qProjectAuthorMap)
             .on(qProjectAuthorMap.projectId.eq(qProject.projectId))
             .leftJoin(qAuthor)
-            .on(qAuthor.authorId.eq(qProjectAuthorMap.authorId))
-            .where(qProject.projectType.eq(Project.ProjectType.NORMAL));
+            .on(qAuthor.authorId.eq(qProjectAuthorMap.authorId));
 
         if (booleanBuilder == null) {
             return query;
