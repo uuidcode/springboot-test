@@ -54,10 +54,12 @@ public class ProjectService extends CoreService<Project> {
         BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
         JPAQuery<Tuple> query = this.selectFromWhere(booleanBuilder);
 
-        Pagination.of(query)
-            .paging(project.getPageable())
-            .sorting(qProject.projectId)
-            .sorting(qProject.projectType);
+        if (project != null) {
+            Pagination.of(query)
+                .paging(project.getPageable())
+                .sorting(qProject.projectId)
+                .sorting(qProject.projectType);
+        }
 
         return this.map(query, this::mapping);
     }
