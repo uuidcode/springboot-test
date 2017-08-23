@@ -1,8 +1,9 @@
 package com.github.uuidcode.springboot.test.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Page<T> {
+public class Page<T> implements Serializable {
     private Long currentPage;
     private Long lastPage;
     private Long startPage;
@@ -114,9 +115,9 @@ public class Page<T> {
             return 1L;
         }
 
-        long mod = currentPage % pageSize;
+        Long mod = currentPage % pageSize;
 
-        if(mod == 0) {
+        if (mod == 0L) {
             mod = pageSize;
         }
 
