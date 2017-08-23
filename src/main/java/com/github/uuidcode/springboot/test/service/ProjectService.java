@@ -54,12 +54,25 @@ public class ProjectService extends CoreService<Project> {
         query.offset(project.getOffset())
             .limit(project.getSize());
 
-        if ("projectTypeDesc".equals(project.getOrderBy())) {
-            query.orderBy(qProject.projectType.desc());
-        }
+        this.processOrderBy(query, project);
 
         List<Project> projectList = this.map(query, this::mapping);
         return project.toPage(projectList, totalCount);
+    }
+
+    public List<Project> findAllForSummary(Project project) {
+        BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
+        JPAQuery<Tuple> query = this.createQuery(booleanBuilder);
+        return this.map(query, this::mapping);
+    }
+
+    private void processOrderBy(JPAQuery<Tuple> query, Project project) {
+        if ("projectTypeDesc".equals(project.getOrderBy())) {
+            query.orderBy(qProject.projectType.desc());
+            return;
+        }
+
+        query.orderBy(qProject.projectId.desc());
     }
 
     public BooleanBuilder createBooleanBuilder(Project project) {
