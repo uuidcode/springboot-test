@@ -2,7 +2,6 @@ package com.github.uuidcode.springboot.test.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -49,7 +48,7 @@ public class ProjectService extends CoreService<Project> {
 
     public Page<Project> findAll(Project project) {
         BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
-        JPAQuery<Tuple> query = this.selectFromWhere(booleanBuilder);
+        JPAQuery<Tuple> query = this.createQuery(booleanBuilder);
         Long totalCount = query.fetchCount();
 
         query.offset(project.getOffset())
@@ -84,14 +83,14 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public Long findAllCount(Project project) {
-        return this.selectFromWhere().fetchCount();
+        return this.createQuery().fetchCount();
     }
 
-    private JPAQuery<Tuple> selectFromWhere() {
-        return this.selectFromWhere(null);
+    private JPAQuery<Tuple> createQuery() {
+        return this.createQuery(null);
     }
 
-    private JPAQuery<Tuple> selectFromWhere(BooleanBuilder booleanBuilder) {
+    private JPAQuery<Tuple> createQuery(BooleanBuilder booleanBuilder) {
         JPAQuery<Tuple> query = this.select(qProject, qPartner, qAuthor,
             JPAExpressions.select(qEpisode.count())
                 .from(qEpisode)
