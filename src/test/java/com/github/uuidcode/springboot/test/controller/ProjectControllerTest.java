@@ -12,7 +12,7 @@ public class ProjectControllerTest extends CoreTest {
     @Test
     public void api1() {
         Result result = new RequestBuilder()
-            .get(this.getHost() + "/api/project?page=2&size=10&sort=projectType,asc&sort=projectId,desc&projectType=NORMAL")
+            .get(this.getHost() + "/api/project?page=2&size=10&orderBy=projectTypeDesc")
             .executeAndGetResult();
 
         assertThat(result.getProjectPage().getList().size()).isGreaterThan(0);

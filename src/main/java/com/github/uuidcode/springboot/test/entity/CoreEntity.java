@@ -50,7 +50,7 @@ public class CoreEntity<T> implements Serializable {
             return null;
         }
 
-        return (this.page - 1) * this.page;
+        return (this.page - 1) * this.size;
     }
 
     public Page toPage(List<T> list, Long totalCount) {
