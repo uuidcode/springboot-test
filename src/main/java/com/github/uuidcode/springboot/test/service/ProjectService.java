@@ -48,11 +48,11 @@ public class ProjectService extends CoreService<Project> {
 
     public Page<Project> findAll(Project project) {
         BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
-        JPAQuery<Tuple> query = this.createQuery(booleanBuilder)
+        JPAQuery<Tuple> query = this.createQuery(booleanBuilder);
+
+        this.orderBy(query, project)
             .offset(project.getOffset())
             .limit(project.getSize());
-
-        this.processOrderBy(query, project);
 
         List<Project> projectList = this.map(query, this::mapping);
         Long totalCount = query.fetchCount();
@@ -65,13 +65,12 @@ public class ProjectService extends CoreService<Project> {
         return this.map(query, this::mapping);
     }
 
-    private void processOrderBy(JPAQuery<Tuple> query, Project project) {
+    private JPAQuery<Tuple> orderBy(JPAQuery<Tuple> query, Project project) {
         if ("projectTypeDesc".equals(project.getOrderBy())) {
-            query.orderBy(qProject.projectType.desc());
-            return;
+            return query.orderBy(qProject.projectType.desc());
         }
 
-        query.orderBy(qProject.projectId.desc());
+        return query.orderBy(qProject.projectId.desc());
     }
 
     public BooleanBuilder createBooleanBuilder(Project project) {
