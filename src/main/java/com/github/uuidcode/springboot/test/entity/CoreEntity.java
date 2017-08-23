@@ -43,11 +43,11 @@ public class CoreEntity<T> implements Serializable {
 
     public Long getOffset() {
         if (this.page == null) {
-            return null;
+            this.page = 1L;
         }
 
         if (this.size == null) {
-            return null;
+            this.size = 10L;
         }
 
         return (this.page - 1) * this.size;
