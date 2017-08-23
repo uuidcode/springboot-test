@@ -13,35 +13,18 @@ public class Page<T> implements Serializable {
     private Long nextStartPage;
     private Long nextEndPage;
     private List<T> list;
-    
-    public List<T> getList() {
-        return this.list;
-    }
-    
-    public Page setList(List<T> list) {
-        this.list = list;
-        return this;
-    }
 
     public Page() {}
 
-    public Page(Long currentPage, Long pageSize, Long pageItemSize, Long totalCount) {
-        this.init(currentPage, pageSize, pageItemSize, totalCount);
+    public Page(Long currentPage, Long pageSize, Long pageItemSize, Long totalCount, List<T> list) {
+        this.init(currentPage, pageSize, pageItemSize, totalCount, list);
     }
 
-    public Page(Long currentPage, Long pageSize, Long totalCount) {
-        this.init(currentPage, pageSize, 10L, totalCount);
+    public Page(Long currentPage, Long pageSize, Long totalCount, List<T> list) {
+        this.init(currentPage, pageSize, 10L, totalCount, list);
     }
 
-    public static Page of(Long currentPage, Long pageSize, Long pageItemSize, Long totalCount) {
-        return new Page(currentPage, pageSize, pageItemSize, totalCount);
-    }
-
-    public static Page of(Long currentPage, Long pageSize, Long totalCount) {
-        return new Page(currentPage, pageSize, totalCount);
-    }
-
-    protected void init(Long currentPage, Long pageSize, Long pageItemSize, Long totalCount) {
+    private void init(Long currentPage, Long pageSize, Long pageItemSize, Long totalCount, List<T> list) {
         this.currentPage = currentPage;
         this.startPage = this.calculateStartPage(currentPage, pageSize);
         this.beforeStartPage = this.calculateBeforeStartPage(pageSize);
@@ -50,10 +33,19 @@ public class Page<T> implements Serializable {
         this.endPage = this.calculateEndPage(pageSize);
         this.nextStartPage = this.calculateNextStartPage(pageSize);
         this.nextEndPage = this.calculateNextEndPage(pageSize);
-
+        this.list = list;
     }
 
-    protected Long calculateNextEndPage(Long pageSize) {
+    public List<T> getList() {
+        return this.list;
+    }
+
+    public Page setList(List<T> list) {
+        this.list = list;
+        return this;
+    }
+
+    private Long calculateNextEndPage(Long pageSize) {
         if ((startPage + pageSize) <= lastPage) {
             if ((endPage + pageSize) <= lastPage) {
                 return endPage + pageSize;
@@ -63,14 +55,14 @@ public class Page<T> implements Serializable {
         return null;
     }
 
-    protected Long calculateNextStartPage(Long pageSize) {
+    private Long calculateNextStartPage(Long pageSize) {
         if ((startPage + pageSize) <= lastPage) {
             return startPage + pageSize;
         }
         return null;
     }
 
-    protected Long calculateBeforeEndPage(Long pageSize) {
+    private Long calculateBeforeEndPage(Long pageSize) {
         if (pageSize > startPage) {
             return null;
         }
@@ -79,21 +71,21 @@ public class Page<T> implements Serializable {
 
     }
 
-    protected Long calculateBeforeStartPage(Long pageSize) {
+    private Long calculateBeforeStartPage(Long pageSize) {
         if (pageSize > startPage) {
             return null;
         }
         return startPage - pageSize;
     }
 
-    protected Long calculateEndPage(Long pageSize) {
+    private Long calculateEndPage(Long pageSize) {
         if ((lastPage - startPage) >= pageSize) {
             return (startPage + pageSize - 1);
         }
         return lastPage;
     }
 
-    protected Long calculateLastPage(Long pageItemSize, Long totalCount) {
+    private Long calculateLastPage(Long pageItemSize, Long totalCount) {
         if (totalCount <= pageItemSize) {
             return 1L;
         }

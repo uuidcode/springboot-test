@@ -53,7 +53,7 @@ public class CoreEntity<T> implements Serializable {
         return (this.page - 1) * this.size;
     }
 
-    public Page toPage(List<T> list, Long totalCount) {
-        return Page.of(this.page, this.size, totalCount).setList(list);
+    public Page<T> toPage(List<T> list, Long totalCount) {
+        return new Page<T>(this.page, this.size, totalCount, list);
     }
 }
