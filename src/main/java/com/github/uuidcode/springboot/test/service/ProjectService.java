@@ -48,15 +48,14 @@ public class ProjectService extends CoreService<Project> {
 
     public Page<Project> findAll(Project project) {
         BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
-        JPAQuery<Tuple> query = this.createQuery(booleanBuilder);
-        Long totalCount = query.fetchCount();
-
-        query.offset(project.getOffset())
+        JPAQuery<Tuple> query = this.createQuery(booleanBuilder)
+            .offset(project.getOffset())
             .limit(project.getSize());
 
         this.processOrderBy(query, project);
 
         List<Project> projectList = this.map(query, this::mapping);
+        Long totalCount = query.fetchCount();
         return project.toPage(projectList, totalCount);
     }
 
