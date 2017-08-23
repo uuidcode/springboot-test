@@ -59,7 +59,7 @@ public class ErrorController extends AbstractErrorController {
 
     @RequestMapping(value = API_ERROR_URL)
     @ResponseBody
-    public Object error(Result result) {
+    public Result error(Result result) {
         return result;
     }
 }
