@@ -18,6 +18,7 @@ import com.github.uuidcode.springboot.test.entity.QProject;
 import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.github.uuidcode.springboot.test.utils.Pagination;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -50,7 +51,8 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public List<Project> findAll(Project project) {
-        JPAQuery<Tuple> query = this.selectFromWhere();
+        BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
+        JPAQuery<Tuple> query = this.selectFromWhere(booleanBuilder);
 
         Pagination.of(query)
             .paging(project.getPageable())
@@ -58,6 +60,16 @@ public class ProjectService extends CoreService<Project> {
             .sorting(qProject.projectType);
 
         return this.map(query, this::mapping);
+    }
+
+    public BooleanBuilder createBooleanBuilder(Project project) {
+        if (project == null) {
+            return null;
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qProject.projectType.eq(project.getProjectType()));
+        return booleanBuilder;
     }
 
     public Project mapping(Tuple tuple) {
@@ -74,18 +86,28 @@ public class ProjectService extends CoreService<Project> {
     }
 
     private JPAQuery<Tuple> selectFromWhere() {
-        return this.select(qProject, qPartner, qAuthor,
-                JPAExpressions.select(qEpisode.count())
+        return this.selectFromWhere(null);
+    }
+
+    private JPAQuery<Tuple> selectFromWhere(BooleanBuilder booleanBuilder) {
+        JPAQuery<Tuple> query = this.select(qProject, qPartner, qAuthor,
+            JPAExpressions.select(qEpisode.count())
                 .from(qEpisode)
                 .where(qEpisode.projectId.eq(qProject.projectId)))
             .from(qProject)
             .leftJoin(qPartner)
-                .on(qPartner.projectId.eq(qProject.projectId))
+            .on(qPartner.projectId.eq(qProject.projectId))
             .leftJoin(qProjectAuthorMap)
-                .on(qProjectAuthorMap.projectId.eq(qProject.projectId))
+            .on(qProjectAuthorMap.projectId.eq(qProject.projectId))
             .leftJoin(qAuthor)
-                .on(qAuthor.authorId.eq(qProjectAuthorMap.authorId))
+            .on(qAuthor.authorId.eq(qProjectAuthorMap.authorId))
             .where(qProject.projectType.eq(Project.ProjectType.NORMAL));
+
+        if (booleanBuilder == null) {
+            return query;
+        }
+
+        return query.where(booleanBuilder);
     }
 
     public void update(Project project) {

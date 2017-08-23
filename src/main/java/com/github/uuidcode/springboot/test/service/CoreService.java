@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
@@ -53,13 +52,6 @@ public class CoreService<T extends CoreEntity> {
     private <T> Class<T> getEntityClass() {
         ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
         return (Class<T>) genericSuperClass.getActualTypeArguments()[0];
-    }
-
-    private BooleanBuilder processBooleanBuilder(BooleanBuilder booleanBuilder) {
-        if (booleanBuilder == null) {
-            booleanBuilder = new BooleanBuilder();
-        }
-        return booleanBuilder;
     }
 
     public LocalDateTime now() {
