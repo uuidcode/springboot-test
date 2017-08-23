@@ -46,43 +46,48 @@ public class Page<T> implements Serializable {
     }
 
     private Long calculateNextEndPage(Long pageSize) {
-        if ((startPage + pageSize) <= lastPage) {
-            if ((endPage + pageSize) <= lastPage) {
-                return endPage + pageSize;
+        if ((this.startPage + pageSize) <= this.lastPage) {
+            if ((this.endPage + pageSize) <= this.lastPage) {
+                return this.endPage + pageSize;
             }
-            return lastPage;
+
+            return this.lastPage;
         }
+
         return null;
     }
 
     private Long calculateNextStartPage(Long pageSize) {
-        if ((startPage + pageSize) <= lastPage) {
-            return startPage + pageSize;
+        if ((this.startPage + pageSize) <= this.lastPage) {
+            return this.startPage + pageSize;
         }
+
         return null;
     }
 
     private Long calculateBeforeEndPage(Long pageSize) {
-        if (pageSize > startPage) {
+        if (pageSize > this.startPage) {
             return null;
         }
 
-        return beforeStartPage + pageSize - 1;
+        return this.beforeStartPage + pageSize - 1;
 
     }
 
     private Long calculateBeforeStartPage(Long pageSize) {
-        if (pageSize > startPage) {
+        if (pageSize > this.startPage) {
             return null;
         }
-        return startPage - pageSize;
+
+        return this.startPage - pageSize;
     }
 
     private Long calculateEndPage(Long pageSize) {
-        if ((lastPage - startPage) >= pageSize) {
-            return (startPage + pageSize - 1);
+        if ((this.lastPage - this.startPage) >= pageSize) {
+            return (this.startPage + pageSize - 1);
         }
-        return lastPage;
+
+        return this.lastPage;
     }
 
     private Long calculateLastPage(Long pageItemSize, Long totalCount) {
@@ -117,42 +122,42 @@ public class Page<T> implements Serializable {
     }
 
     public Long getCurrentPage() {
-        return currentPage;
+        return this.currentPage;
     }
 
     public Long getLastPage() {
-        return lastPage;
+        return this.lastPage;
     }
 
     public Long getStartPage() {
-        return startPage;
+        return this.startPage;
     }
 
     public Long getEndPage() {
-        return endPage;
+        return this.endPage;
     }
 
     public Boolean hasBefore() {
-        return beforeStartPage != null && beforeEndPage != null;
+        return this.beforeStartPage != null && this.beforeEndPage != null;
     }
 
     public Long getBeforeStartPage() {
-        return beforeStartPage;
+        return this.beforeStartPage;
     }
 
     public Long getBeforeEndPage() {
-        return beforeEndPage;
+        return this.beforeEndPage;
     }
 
     public Boolean hasNext() {
-        return nextStartPage != null && nextEndPage != null;
+        return this.nextStartPage != null && this.nextEndPage != null;
     }
 
     public Long getNextStartPage() {
-        return nextStartPage;
+        return this.nextStartPage;
     }
 
     public Long getNextEndPage() {
-        return nextEndPage;
+        return this.nextEndPage;
     }
 }
