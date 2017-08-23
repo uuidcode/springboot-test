@@ -2,7 +2,6 @@ package com.github.uuidcode.springboot.test.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -58,13 +57,10 @@ public class ProjectService extends CoreService<Project> {
             .sorting(qProject.projectId)
             .sorting(qProject.projectType);
 
-        return query.fetch()
-            .stream()
-            .map(this::processProject)
-            .collect(Collectors.toList());
+        return this.map(query, this::mapping);
     }
 
-    public Project processProject(Tuple tuple) {
+    public Project mapping(Tuple tuple) {
         Project project = tuple.get(qProject);
         Partner partner = tuple.get(qPartner);
         Author author = tuple.get(qAuthor);

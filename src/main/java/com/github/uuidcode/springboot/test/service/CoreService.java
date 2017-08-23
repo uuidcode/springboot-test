@@ -2,7 +2,6 @@ package com.github.uuidcode.springboot.test.service;
 
 import static java.util.Optional.ofNullable;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -10,7 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,18 +20,13 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
-import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -109,5 +105,12 @@ public class CoreService<T extends CoreEntity> {
 
     public JPADeleteClause delete(EntityPath<T> entityPath) {
         return this.queryFactory().delete(entityPath);
+    }
+
+    public List<T> map(JPAQuery<Tuple> query, Function<Tuple, T> mapper) {
+        return query.fetch()
+            .stream()
+            .map(mapper)
+            .collect(Collectors.toList());
     }
 }
