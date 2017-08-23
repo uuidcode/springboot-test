@@ -59,11 +59,7 @@ public class ProjectService extends CoreService<Project> {
             query.orderBy(qProject.projectType.desc());
         }
 
-        List<Project> projectList = query.fetch()
-            .stream()
-            .map(this::mapping)
-            .collect(Collectors.toList());
-
+        List<Project> projectList = this.map(query, this::mapping);
         return project.toPage(projectList, totalCount);
     }
 

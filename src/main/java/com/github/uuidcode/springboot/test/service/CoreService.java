@@ -101,10 +101,10 @@ public class CoreService<T extends CoreEntity> {
         return this.queryFactory().delete(entityPath);
     }
 
-    public Page<T> map(JPAQuery<Tuple> query, Function<Tuple, T> mapper) {
-        return new PageImpl<>(query.fetch()
+    public List<T> map(JPAQuery<Tuple> query, Function<Tuple, T> mapper) {
+        return query.fetch()
             .stream()
             .map(mapper)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
     }
 }
