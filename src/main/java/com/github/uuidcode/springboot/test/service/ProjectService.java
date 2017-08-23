@@ -64,10 +64,6 @@ public class ProjectService extends CoreService<Project> {
     }
 
     public BooleanBuilder createBooleanBuilder(Project project) {
-        if (project == null) {
-            return null;
-        }
-
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         Project.ProjectType projectType = project.getProjectType();
 
