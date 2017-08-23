@@ -25,7 +25,17 @@ public class Result implements Serializable {
     private Project project;
     private Integer status;
     private Layout.LayoutType layoutType;
-
+    private Page<Project> projectPage;
+    
+    public Page<Project> getProjectPage() {
+        return this.projectPage;
+    }
+    
+    public Result setProjectPage(Page<Project> projectPage) {
+        this.projectPage = projectPage;
+        return this;
+    }
+    
     public Layout.LayoutType getLayoutType() {
         return this.layoutType;
     }

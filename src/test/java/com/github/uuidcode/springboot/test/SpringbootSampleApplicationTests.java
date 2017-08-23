@@ -126,11 +126,6 @@ public class SpringbootSampleApplicationTests {
     }
 
     @Test
-    public void projectServiceFindAll() {
-        this.logger.debug(">>> {}", CoreUtil.toJson(this.projectService.findAll()));
-    }
-
-    @Test
     public void partner() {
         Project project = this.projectService.findById(-1L);
         assertThat(project).isNull();

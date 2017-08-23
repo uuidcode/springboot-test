@@ -25,13 +25,12 @@ public class ProjectController {
     @RequestMapping(value = "/api/project", method = RequestMethod.GET)
     @ResponseBody
     public Result apiList(Project project, Pageable pageable) {
-        project.setPageable(pageable);
-        return new Result().setProjectList(this.projectService.findAll(project));
+        return new Result().setProjectPage(this.projectService.findAll(project));
     }
 
     @RequestMapping(value = "/project", method = RequestMethod.GET)
     public void list(Model model, Project project) {
-        Result result = new Result().setProjectList(this.projectService.findAll(project));
+        Result result = new Result().setProjectPage(this.projectService.findAll(project));
         model.addAttribute("result", result);
     }
 }

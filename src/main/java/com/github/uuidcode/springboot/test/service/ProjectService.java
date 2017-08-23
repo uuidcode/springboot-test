@@ -2,12 +2,14 @@ package com.github.uuidcode.springboot.test.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.github.uuidcode.springboot.test.domain.Page;
 import com.github.uuidcode.springboot.test.entity.Author;
 import com.github.uuidcode.springboot.test.entity.Partner;
 import com.github.uuidcode.springboot.test.entity.Project;
@@ -17,7 +19,6 @@ import com.github.uuidcode.springboot.test.entity.QPartner;
 import com.github.uuidcode.springboot.test.entity.QProject;
 import com.github.uuidcode.springboot.test.entity.QProjectAuthorMap;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
-import com.github.uuidcode.springboot.test.utils.Pagination;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
@@ -46,22 +47,24 @@ public class ProjectService extends CoreService<Project> {
         return project;
     }
 
-    public List<Project> findAll() {
-        return this.findAll(null);
-    }
-
-    public List<Project> findAll(Project project) {
+    public Page<Project> findAll(Project project) {
         BooleanBuilder booleanBuilder = this.createBooleanBuilder(project);
         JPAQuery<Tuple> query = this.selectFromWhere(booleanBuilder);
+        Long totalCount = query.fetchCount();
 
-        if (project != null) {
-            Pagination.of(query)
-                .paging(project.getPageable())
-                .sorting(qProject.projectId)
-                .sorting(qProject.projectType);
+        query.offset(project.getOffset())
+            .limit(project.getSize());
+
+        if ("projectTypeDesc".equals(project.getOrderBy())) {
+            query.orderBy(qProject.projectType.desc());
         }
 
-        return this.map(query, this::mapping);
+        List<Project> projectList = query.fetch()
+            .stream()
+            .map(this::mapping)
+            .collect(Collectors.toList());
+
+        return project.toPage(projectList, totalCount);
     }
 
     public BooleanBuilder createBooleanBuilder(Project project) {

@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.uuidcode.springboot.test.entity.Project;
@@ -35,21 +34,6 @@ public class ProjectServiceTest {
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> findById project: {}", CoreUtil.toJson(project));
-        }
-    }
-
-    @Test
-    public void findAll() {
-        List<Project> list = this.projectService.findAll();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> findAll list: {}", CoreUtil.toJson(list));
-        }
-
-        list = this.projectService.findAll(new Project().setProjectId(10L).setPageable(new PageRequest(2, 10)));
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> findAll list: {}", CoreUtil.toJson(list));
         }
     }
 
@@ -102,7 +86,7 @@ public class ProjectServiceTest {
         LocalDateTime now = LocalDateTime.now();
         this.projectService.updateById(project.getProjectId(), p -> p.setName(CoreUtil.formatDateTime(now)));
 
-        List<Project> list = this.projectService.findAll();
+        List<Project> list = this.projectService.findAll(new Project()).getList();
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> insertAndSelect list: {}", CoreUtil.toJson(list));

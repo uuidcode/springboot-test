@@ -20,6 +20,8 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.entity.CoreEntity;
@@ -99,10 +101,10 @@ public class CoreService<T extends CoreEntity> {
         return this.queryFactory().delete(entityPath);
     }
 
-    public List<T> map(JPAQuery<Tuple> query, Function<Tuple, T> mapper) {
-        return query.fetch()
+    public Page<T> map(JPAQuery<Tuple> query, Function<Tuple, T> mapper) {
+        return new PageImpl<>(query.fetch()
             .stream()
             .map(mapper)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
     }
 }

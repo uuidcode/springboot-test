@@ -112,6 +112,7 @@ public class CoreUtil {
                 });
             }
         });
+
         return objectMapper;
     }
 
