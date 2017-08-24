@@ -55,7 +55,7 @@ public class CoreService<T extends CoreEntity> {
     }
 
     public LocalDateTime now() {
-        Query query = this.entityManager.createNativeQuery("select now()");
+        Query query = this.entityManager.createNativeQuery("SELECT CURRENT_TIMESTAMP");
         Date date = (Date) query.getSingleResult();
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
