@@ -10,8 +10,7 @@ import com.github.uuidcode.springboot.test.entity.Episode;
 @Transactional
 public class EpisodeService extends CoreService<Episode> {
     public void update(Episode episode) {
-        super.updateById(
-            episode::getEpisodeId,
+        super.updateById(episode::getEpisodeId,
             e -> e.setName(episode.getName()));
     }
 }
