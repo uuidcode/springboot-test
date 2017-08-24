@@ -19,7 +19,21 @@ public class QAuthor extends EntityPathBase<Author> {
 
     public static final QAuthor author = new QAuthor("author");
 
+    public final QCoreEntity _super = new QCoreEntity(this);
+
     public final NumberPath<Long> authorId = createNumber("authorId", Long.class);
+
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+
+    //inherited
+    public final NumberPath<Long> modifiedBy = _super.modifiedBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath name = createString("name");
 

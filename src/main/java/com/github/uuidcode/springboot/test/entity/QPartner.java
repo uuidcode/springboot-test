@@ -19,6 +19,20 @@ public class QPartner extends EntityPathBase<Partner> {
 
     public static final QPartner partner = new QPartner("partner");
 
+    public final QCoreEntity _super = new QCoreEntity(this);
+
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+
+    //inherited
+    public final NumberPath<Long> modifiedBy = _super.modifiedBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
     public final StringPath name = createString("name");
 
     public final NumberPath<Long> partnerId = createNumber("partnerId", Long.class);

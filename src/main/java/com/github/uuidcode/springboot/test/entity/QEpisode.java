@@ -19,17 +19,27 @@ public class QEpisode extends EntityPathBase<Episode> {
 
     public static final QEpisode episode = new QEpisode("episode");
 
-    public final DateTimePath<java.time.LocalDateTime> addedDateTime = createDateTime("addedDateTime", java.time.LocalDateTime.class);
+    public final QCoreEntity _super = new QCoreEntity(this);
+
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final NumberPath<Long> episodeId = createNumber("episodeId", Long.class);
 
     public final EnumPath<Episode.EpisodeType> episodeType = createEnum("episodeType", Episode.EpisodeType.class);
 
+    //inherited
+    public final NumberPath<Long> modifiedBy = _super.modifiedBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
     public final StringPath name = createString("name");
 
     public final NumberPath<Long> projectId = createNumber("projectId", Long.class);
-
-    public final DateTimePath<java.time.LocalDateTime> updatedDateTime = createDateTime("updatedDateTime", java.time.LocalDateTime.class);
 
     public QEpisode(String variable) {
         super(Episode.class, forVariable(variable));

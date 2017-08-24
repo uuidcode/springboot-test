@@ -1,18 +1,22 @@
 package com.github.uuidcode.springboot.test.entity;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.assertj.core.api.Assertions;
+import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
+@AuditOverride(forClass = CoreEntity.class)
 public class Episode extends CoreEntity<Episode> {
     public enum EpisodeType {
         OPEN, CLOSED
@@ -22,10 +26,12 @@ public class Episode extends CoreEntity<Episode> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long episodeId;
 
+    @Column(length = 100)
     private String name;
-    private LocalDateTime addedDateTime;
-    private LocalDateTime updatedDateTime;
     private Long projectId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private EpisodeType episodeType;
 
     public EpisodeType getEpisodeType() {
@@ -64,22 +70,6 @@ public class Episode extends CoreEntity<Episode> {
         return this;
     }
 
-    public LocalDateTime getUpdatedDateTime() {
-        return this.updatedDateTime;
-    }
-
-    public Episode setUpdatedDateTime(LocalDateTime updatedDateTime) {
-        this.updatedDateTime = updatedDateTime;
-        return this;
-    }
-    public LocalDateTime getAddedDateTime() {
-        return this.addedDateTime;
-    }
-
-    public Episode setAddedDateTime(LocalDateTime addedDateTime) {
-        this.addedDateTime = addedDateTime;
-        return this;
-    }
     public String getName() {
         return this.name;
     }

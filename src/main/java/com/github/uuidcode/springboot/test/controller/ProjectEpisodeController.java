@@ -1,15 +1,15 @@
 package com.github.uuidcode.springboot.test.controller;
 
-import com.github.uuidcode.springboot.test.service.ProjectEpisodeService;
+import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import com.github.uuidcode.springboot.test.service.EpisodeService;
 
 @RestController
 public class ProjectEpisodeController {
     @Resource
-    private ProjectEpisodeService projectEpisodeService;
+    private EpisodeService projectEpisodeService;
 
 //    @RequestMapping(value = "/episode", method = RequestMethod.GET)
 //    public Optional<ProjectEpisode> list() {

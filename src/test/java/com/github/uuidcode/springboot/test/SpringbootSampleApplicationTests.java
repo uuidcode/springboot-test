@@ -25,7 +25,7 @@ import com.github.uuidcode.springboot.test.entity.ProjectAuthorMap;
 import com.github.uuidcode.springboot.test.service.AuthorService;
 import com.github.uuidcode.springboot.test.service.PartnerService;
 import com.github.uuidcode.springboot.test.service.ProjectAuthorMapService;
-import com.github.uuidcode.springboot.test.service.ProjectEpisodeService;
+import com.github.uuidcode.springboot.test.service.EpisodeService;
 import com.github.uuidcode.springboot.test.service.ProjectService;
 import com.github.uuidcode.springboot.test.utils.CoreUtil;
 import com.github.uuidcode.springboot.test.utils.RequestBuilder;
@@ -40,7 +40,7 @@ public class SpringbootSampleApplicationTests {
     private ProjectService projectService;
 
     @Resource
-    private ProjectEpisodeService projectEpisodeService;
+    private EpisodeService projectEpisodeService;
 
     @Resource
     private AuthorService authorService;
@@ -60,9 +60,7 @@ public class SpringbootSampleApplicationTests {
         Project project =
             new Project()
                 .setName(name)
-                .setProjectType(Project.ProjectType.SPECIAL)
-                .setAddedDateTime(now)
-                .setUpdatedDateTime(now);
+                .setProjectType(Project.ProjectType.SPECIAL);
 
         this.projectService.save(project);
 
@@ -94,8 +92,6 @@ public class SpringbootSampleApplicationTests {
         Episode projectEpisode =
             new Episode()
                 .setName(CoreUtil.createUUID())
-                .setAddedDateTime(now)
-                .setUpdatedDateTime(now)
                 .setProjectId(1L);
 
         this.projectEpisodeService.save(projectEpisode);

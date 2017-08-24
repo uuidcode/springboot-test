@@ -19,15 +19,25 @@ public class QProject extends EntityPathBase<Project> {
 
     public static final QProject project = new QProject("project");
 
-    public final DateTimePath<java.time.LocalDateTime> addedDateTime = createDateTime("addedDateTime", java.time.LocalDateTime.class);
+    public final QCoreEntity _super = new QCoreEntity(this);
+
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+
+    //inherited
+    public final NumberPath<Long> modifiedBy = _super.modifiedBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath name = createString("name");
 
     public final NumberPath<Long> projectId = createNumber("projectId", Long.class);
 
     public final EnumPath<Project.ProjectType> projectType = createEnum("projectType", Project.ProjectType.class);
-
-    public final DateTimePath<java.time.LocalDateTime> updatedDateTime = createDateTime("updatedDateTime", java.time.LocalDateTime.class);
 
     public QProject(String variable) {
         super(Project.class, forVariable(variable));

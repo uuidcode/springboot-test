@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.uuidcode.springboot.test.domain.Page;
 import com.github.uuidcode.springboot.test.entity.Author;
+import com.github.uuidcode.springboot.test.entity.Episode;
 import com.github.uuidcode.springboot.test.entity.Partner;
 import com.github.uuidcode.springboot.test.entity.Project;
 import com.github.uuidcode.springboot.test.entity.QAuthor;
@@ -34,6 +35,9 @@ public class ProjectService extends CoreService<Project> {
 
     @Resource
     private PartnerService partnerService;
+
+    @Resource
+    private EpisodeService episodeService;
 
     @Override
     public Project findById(Long projectId) {
@@ -135,6 +139,21 @@ public class ProjectService extends CoreService<Project> {
         this.delete(qProject)
             .where(qProject.projectId.goe(id))
             .execute();
+    }
+
+    public Project save() {
+        Project project = new Project().setName(CoreUtil.createUUID());
+        this.save(project);
+
+        this.episodeService.save(new Episode()
+            .setProjectId(project.getProjectId())
+            .setName(CoreUtil.createUUID()));
+
+        this.episodeService.save(new Episode()
+            .setProjectId(project.getProjectId())
+            .setName(CoreUtil.createUUID()));
+
+        return project;
     }
 }
 

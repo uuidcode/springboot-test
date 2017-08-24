@@ -8,11 +8,10 @@ import com.github.uuidcode.springboot.test.entity.Episode;
 
 @Service
 @Transactional
-public class ProjectEpisodeService extends CoreService<Episode> {
+public class EpisodeService extends CoreService<Episode> {
     public void update(Episode episode) {
         super.updateById(
             episode::getEpisodeId,
-            e -> e.setName(episode.getName())
-                .setUpdatedDateTime(this.now()));
+            e -> e.setName(episode.getName()));
     }
 }

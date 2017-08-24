@@ -10,11 +10,8 @@ import java.util.stream.IntStream;
 import javax.annotation.Resource;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.uuidcode.springboot.test.CoreTest;
 import com.github.uuidcode.springboot.test.entity.Project;
@@ -25,6 +22,9 @@ public class ProjectServiceTest extends CoreTest {
 
     @Resource
     private ProjectService projectService;
+
+    @Resource
+    private EpisodeService episodeService;
 
     @Test
     public void findById() {
@@ -38,12 +38,7 @@ public class ProjectServiceTest extends CoreTest {
 
     @Test
     public void save() {
-        Project project = new Project().setName(CoreUtil.createUUID());
-        this.projectService.save(project);
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> save project: {}", CoreUtil.toJson(project));
-        }
+        this.projectService.save();
     }
 
     @Test

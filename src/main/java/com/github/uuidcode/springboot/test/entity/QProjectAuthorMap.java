@@ -19,11 +19,25 @@ public class QProjectAuthorMap extends EntityPathBase<ProjectAuthorMap> {
 
     public static final QProjectAuthorMap projectAuthorMap = new QProjectAuthorMap("projectAuthorMap");
 
+    public final QCoreEntity _super = new QCoreEntity(this);
+
     public final NumberPath<Long> authorId = createNumber("authorId", Long.class);
+
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final NumberPath<Long> displayOrder = createNumber("displayOrder", Long.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    //inherited
+    public final NumberPath<Long> modifiedBy = _super.modifiedBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final NumberPath<Long> projectId = createNumber("projectId", Long.class);
 

@@ -2,9 +2,9 @@ package com.github.uuidcode.springboot.test.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,10 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.assertj.core.api.Assertions;
+import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
+@AuditOverride(forClass = CoreEntity.class)
 public class Project extends CoreEntity<Project> {
     public enum ProjectType {
         NORMAL,
@@ -28,13 +30,11 @@ public class Project extends CoreEntity<Project> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long projectId;
 
+    @Column(length = 100)
     private String name;
 
-    private LocalDateTime addedDateTime;
-
-    private LocalDateTime updatedDateTime;
-
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private ProjectType projectType;
 
     @Transient
@@ -108,22 +108,6 @@ public class Project extends CoreEntity<Project> {
         return this;
     }
 
-    public LocalDateTime getUpdatedDateTime() {
-        return this.updatedDateTime;
-    }
-
-    public Project setUpdatedDateTime(LocalDateTime updatedDateTime) {
-        this.updatedDateTime = updatedDateTime;
-        return this;
-    }
-    public LocalDateTime getAddedDateTime() {
-        return this.addedDateTime;
-    }
-    
-    public Project setAddedDateTime(LocalDateTime addedDateTime) {
-        this.addedDateTime = addedDateTime;
-        return this;
-    }
     public String getName() {
         return this.name;
     }
